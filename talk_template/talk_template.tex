@@ -1,0 +1,176 @@
+%\documentclass[11pt]{beamer}
+%%
+%% Choose how your presentation looks.
+%%
+%% For more themes, color themes and font themes, see:
+%% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%%
+%
+%
+%\mode<presentation>
+%{
+%  \usetheme{Madrid}      % or try Darmstadt, Madrid, Warsaw, ...
+%  \usecolortheme{default} % or try albatross, beaver, crane, ...
+%  \usefonttheme{default}  % or try serif, structurebold, ...
+%  \setbeamertemplate{navigation symbols}{}
+%  \setbeamertemplate{caption}[numbered]
+%
+%} 
+%\usepackage{amsmath,amssymb,amsthm,graphicx,float,url,subfigure,cite, pdflscape,color,setspace, xspace}
+%\usepackage{multimedia}
+%\usepackage[english]{babel}
+%\usepackage[utf8x]{inputenc}
+%%\usepackage{media9}
+
+\documentclass[aspectratio=43]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{csquotes}%Correctly typeset Vojtech
+\usepackage{csvsimple}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{styles/beamer_eit-en}
+\usepackage[export]{adjustbox}
+\usepackage[font={scriptsize}]{caption}%Smaller image captions, it for italics, can choose footnotesize to be even smaller
+\captionsetup[figure]{labelformat=empty}%Remove "Figure" from the figure caption
+%\setbeamertemplate{footline}[frame number]
+%\setbeamerfont{footline}{series=\bfseries}
+
+%Mathematic packages
+\usepackage{amsthm,graphicx,float,url,subfigure,cite, pdflscape,color,setspace, xspace}
+\usepackage{amsbsy}
+\usepackage{relsize}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{customc}{
+  backgroundcolor=\color{backcolour},
+  belowcaptionskip=1\baselineskip,
+ breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+  basicstyle=\footnote[frame]size\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}
+%\lstset{escapechar=@,style=customc}
+
+\usepackage{xcolor}
+
+
+\newcommand{\red}[1]{{\color{red}#1}}
+
+\title[Shortened title]
+{GERC/MultiForm Talk template:\\
+{\smaller Subtitle}
+}
+\author[Shortened author names]{Authors}
+\institute{University of Nottingham}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+% \tableofcontents
+%\end{frame}
+
+%%%%%% Matteo - overview of research at UoN and overall theme of talk
+\begin{frame}{Research @ University of Nottingham}
+
+
+{\begin{center}
+\includegraphics[width=0.5\linewidth]{GERC-logo.jpg}
+\end{center}
+}
+
+
+\begin{itemize}
+\item Interdisciplinary research centre on porous media energy applications
+\item \textbf{Mathematics}, Engineering, Chemistry
+\item Applications: Carbon Capture and Storage, Unconventional reservoirs, Geothermal, Li-ion batteries
+\item Pore-scale modelling, Upscaling, Porous media characterisation
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Multiscale Fluid Dynamics and Porous Media Group}{}
+\begin{center}
+{\Large
+\url{www.multiform.xyz}
+}
+\end{center}
+
+\begin{itemize}
+\item Non-Fickian transport and mixing\footnote[frame]{DENTZ M., HIDALGO J., ICARDI M., Mechanisms of Dispersion in Porous Media. Journal of Fluid Mechanics, 2018.}
+\item \alert{Heterogeneous reactions, adsorption, deposition}\footnote[frame]{BOCCARDO G., CREVACORE E., SETHI R., ICARDI M., A robust upscaling of the effective particle deposition rate in porous media. Journal of Contaminant Hydrology, 2018.}
+\item Conjugate heat/mass transfer\footnote[frame]{MUNICCHI F., ICARDI M., Generalised Multi-Rate Models for conjugate transfer in heterogeneous materials, arXiv preprint}
+\item Particulate flows\footnote[frame]{ICARDI M., NIASAR V., SCHREYER L., Coupled processes in charged porous media - from theory to applications, Transport in Porous Media. 2019.}, suspensions
+\end{itemize}
+\end{frame}
+
+
+%%%%%% Emma - Motivation behind pore-scale simulations and OpenFOAM implementation
+
+\begin{frame}{Governing equations}
+Transport of concentration field in the fluid, $u$, throughout the porous media with binding of solute to the surface, $s$:
+\begin{align*}
+&\frac{\partial u}{\partial t} + \underline{v}\cdot\left(\triangledown u\right) - D_{m}\triangledown^{2}u = 0, \\
+%&s_{t}=K_{a} f_{i}\left(\frac{s}{s_{ref}}\right) u - K_{d} f_{j}\left(\frac{u}{u_{ref}}\right) s.
+\label{eq:advdiff_pore}
+\end{align*}
+\end{frame}
+
+\begin{frame}{Governing equations}
+The boundary condition for the reactive surface is given by:
+\begin{equation*}
+-D \nabla_n u = \underbrace{K_{a} f_{i}\left(\frac{s}{s_{ref}}\right) u}_{adsorption} - \underbrace{K_{d} f_{j}\left(\frac{u}{u_{ref}}\right) s}_{desorption}
+= \frac{\partial s}{\partial t}.
+\label{eq:BC_gen_f}
+\end{equation*}
+\end{frame}
+
+\begin{frame}{Example illustrations}
+To center the figures and make them larger than the space allowed for text use the command \\makebox
+\begin{figure}
+\makebox[\textwidth][c]
+{
+\includegraphics[width=1.3\linewidth]{GERC-logo}
+}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Conclusions}
+\begin{itemize}
+\item something
+\item something else
+\item etc... 
+\end{itemize}
+Future work:
+\begin{itemize}
+\item improving these templates
+\item etc...
+\end{itemize}
+
+\end{frame}
+
+\end{document}
+
